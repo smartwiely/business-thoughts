@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#f7f6f2">
+  <meta name="description" content="关于企业、市场与技术变迁的日常商业思考。">
+  <title>商业札记 — 日常商业思考</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23172235'/%3E%3Cpath d='M16 46V18h6l20 19V18h6v28h-6L22 27v19z' fill='%23f7f6f2'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="site.css">
+</head>
+<body>
+  <header class="site-header"><a class="wordmark" href="#top" aria-label="商业札记首页"><span class="mark">N</span><span>商业札记<small>BUSINESS NOTES</small></span></a><nav aria-label="主导航"><a href="#latest">思考</a><a href="#about">关于</a></nav><span class="header-index">个人观察&nbsp; / &nbsp;持续更新</span></header>
+  <main class="page-shell">
+    <section class="hero" id="top"><div class="eyebrow"><span class="eyebrow-line"></span>商业 · 组织 · 技术</div><h1>在变化中，<br><em>看清商业的本质。</em></h1><p class="hero-copy">这里记录我对企业、市场与技术变迁的日常观察。少一些追逐热点，多一些关于因果、选择与长期价值的思考。</p><a class="text-link" href="#latest">阅读最新思考 <span aria-hidden="true">↓</span></a><div class="hero-index" aria-hidden="true"><span>FIELD NOTES</span><strong>01</strong><span>持续更新</span></div></section>
+    <section class="latest section-rule" id="latest"><div class="section-heading"><div><div class="eyebrow">THE JOURNAL</div><h2>最新思考</h2></div><span class="section-aside">观点会随事实更新；文章保留写作时的判断。</span></div>
+      <a class="featured" href="麦肯锡与大型企业战略动向备忘录.html"><span class="featured-kicker">FEATURED NOTE&nbsp; · &nbsp;研究备忘录</span><span class="featured-title">麦肯锡与大型企业战略动向备忘录</span><span class="featured-description">麦肯锡近期观点与大型企业战略方向梳理</span><span class="featured-arrow" aria-hidden="true">↗</span></a>
+      <div id="post-list" class="post-list" aria-live="polite"><div class="empty-state"><div class="empty-mark" aria-hidden="true">+</div><div><h3>正在整理思考……</h3><p>稍等片刻，内容即将呈现。</p></div></div></div><noscript><p class="noscript">请启用 JavaScript 以读取文章列表。</p></noscript></section>
+    <section class="about section-rule" id="about"><div class="about-label"><div class="eyebrow">ABOUT THIS SPACE</div><h2>关于这里</h2></div><div class="about-copy"><p>商业不是一连串孤立的新闻，而是技术、资本、组织与人的选择彼此作用的结果。这个页面用来整理那些值得反复推敲的问题。</p><p>内容是个人观察，不构成投资、法律或经营建议。引用的数据与观点会尽可能链接到原始来源。</p></div></section>
+  </main>
+  <footer class="site-footer"><span>商业札记 <span class="footer-separator">/</span> 记录判断，也记录判断如何改变</span><a href="#top">回到顶部 ↑</a></footer>
+  <script>
+    const list = document.querySelector('#post-list');
+    function renderPost(post) {
+      const article = document.createElement('article'); article.className = 'post-row';
+      const time = document.createElement('time'); time.dateTime = String(post.date || ''); time.textContent = String(post.date || '').replaceAll('-', '.');
+      const main = document.createElement('div'); main.className = 'post-main';
+      const meta = document.createElement('div'); meta.className = 'post-meta'; const category = document.createElement('span'); category.textContent = String(post.category || '商业观察'); meta.append(category);
+      const title = document.createElement('h3'); title.textContent = String(post.title || '未命名思考');
+      const excerpt = document.createElement('p'); excerpt.textContent = String(post.summary || '');
+      const details = document.createElement('details'); details.className = 'post-details'; const label = document.createElement('summary'); label.textContent = '展开阅读';
+      const body = document.createElement('div'); body.className = 'post-body'; String(post.body || '').split(/\n\s*\n/).filter(Boolean).forEach(text => { const p = document.createElement('p'); p.textContent = text; body.append(p); }); details.append(label, body);
+      if (Array.isArray(post.sources) && post.sources.length) { const sources = document.createElement('div'); sources.className = 'sources'; const heading = document.createElement('span'); heading.textContent = '参考来源'; sources.append(heading); post.sources.forEach(source => { const a = document.createElement('a'); a.href = String(source.url || '#'); a.textContent = String(source.title || source.url || '来源'); a.target = '_blank'; a.rel = 'noopener noreferrer'; sources.append(a); }); body.append(sources); }
+      main.append(meta, title, excerpt, details); const arrow = document.createElement('span'); arrow.className = 'row-arrow'; arrow.setAttribute('aria-hidden','true'); arrow.textContent = '↗'; article.append(time, main, arrow); return article;
+    }
+    fetch('thoughts.json').then(r => { if (!r.ok) throw new Error('content unavailable'); return r.json(); }).then(posts => {
+      if (!Array.isArray(posts) || posts.length === 0) { list.innerHTML = '<div class="empty-state"><div class="empty-mark" aria-hidden="true">+</div><div><h3>下一篇思考，正在路上。</h3><p>每当一个判断值得留下，我会把它写下来。</p></div><span class="empty-note">COMING INTO FOCUS</span></div>'; return; }
+      list.replaceChildren(...posts.sort((a,b) => String(b.date).localeCompare(String(a.date))).map(renderPost));
+    }).catch(() => { list.innerHTML = '<div class="empty-state"><div class="empty-mark" aria-hidden="true">i</div><div><h3>文章暂时无法载入。</h3><p>请刷新页面，或稍后再来。</p></div></div>'; });
+  </script>
+</body>
+</html>
